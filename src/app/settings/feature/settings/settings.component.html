@@ -1,0 +1,121 @@
+<form class="space-y-6">
+  <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
+    <div class="md:grid md:grid-cols-3 md:gap-6">
+      <div class="md:col-span-1">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Admin</h3>
+        <p class="mt-1 text-sm text-gray-500">Set a new password for the server admin account.</p>
+      </div>
+      <div class="mt-5 space-y-6 md:col-span-2 md:mt-0">
+        <div class="col-span-6 sm:col-span-3">
+          <mat-form-field class="w-full">
+            <mat-label>Old Password</mat-label>
+            <input name="oldPassword" autocomplete="new-password" type="password" [formControl]="adminFormGroup.controls.oldPassword" matInput placeholder="" value="">
+            @if (adminFormGroup.controls.oldPassword.hasError('required')) {
+              <mat-error>
+                Old password is <strong>required</strong>
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <mat-form-field class="w-full">
+            <mat-label>New Password</mat-label>
+            <input name="newPassword" autocomplete="new-password" type="password" [formControl]="adminFormGroup.controls.newPassword" matInput placeholder="" value="">
+            @if (adminFormGroup.controls.newPassword.hasError('required')) {
+              <mat-error>
+                New Password is <strong>required</strong>
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <mat-form-field class="w-full">
+            <mat-label>Confirm the new password...</mat-label>
+            <input name="newPasswordRepeat" autocomplete="new-password" type="password" [formControl]="adminFormGroup.controls.newPasswordRepeat" matInput placeholder="" value="">
+            @if (adminFormGroup.controls.newPasswordRepeat.hasError('required')) {
+              <mat-error>
+                New Password is <strong>required</strong>
+              </mat-error>
+            }
+          </mat-form-field>
+          @if (adminFormGroup.hasError('not-equal') && adminFormGroup.touched) {
+            <div class="mat-mdc-form-field-error mat-mdc-form-field-bottom-align" style="font-size: 0.75rem; color: var(--mdc-theme-error, #f44336); margin-left: 16px;">
+              New passwords <strong>don't</strong> match
+            </div>
+          }
+        </div>
+        <div class="bg-gray-50 px-4 py-3 text-right sm:px-6 col-span-6 sm:col-span-6">
+          <button type="button" (click)="updatePassword()" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>
+
+<form class="mt-5 space-y-6">
+  <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6">
+    <div class="md:grid md:grid-cols-3 md:gap-6">
+      <div class="md:col-span-1">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">Basic Settings</h3>
+        <p class="mt-1 text-sm text-gray-500">Basic Settings for the OppenTTD server</p>
+      </div>
+      <div class="mt-5 space-y-6 md:col-span-2 md:mt-0">
+        <div class="col-span-6 sm:col-span-3">
+          <mat-form-field class="w-full">
+            <mat-label>Auto Save in minutes (-1 to disable auto save for all servers)</mat-label>
+            <input type="number" name="autoSaveMinutes" autocomplete="new-autoSaveMinutes" [formControl]="basicSettingsFormGroup.controls.autoSaveMinutes" matInput placeholder="" value="">
+            @if (basicSettingsFormGroup.controls.autoSaveMinutes.hasError('required')) {
+              <mat-error>
+                Value <strong>required</strong>
+              </mat-error>
+            }
+            @if (basicSettingsFormGroup.controls.autoSaveMinutes.hasError('min')) {
+              <mat-error>
+                Value must >= -1
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-span-6 sm:col-span-3">
+          <mat-form-field class="w-full">
+            <mat-label>Maximum number of <strong>newest</strong> auto save games that should be kept per server.</mat-label>
+            <input type="number" name="numberOfAutoSaveFilesToKeep" autocomplete="new-numberOfAutoSaveFilesToKeep" [formControl]="basicSettingsFormGroup.controls.numberOfAutoSaveFilesToKeep" matInput placeholder="" value="">
+            @if (basicSettingsFormGroup.controls.numberOfAutoSaveFilesToKeep.hasError('required')) {
+              <mat-error>
+                Value <strong>required</strong>
+              </mat-error>
+            }
+            @if (basicSettingsFormGroup.controls.numberOfAutoSaveFilesToKeep.hasError('min')) {
+              <mat-error>
+                Value must >= 1
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-span-6 sm:col-span-3">
+          <mat-form-field class="w-full">
+            <mat-label>Maximum number of <strong>newest</strong> manual save games that should be kept per server.</mat-label>
+            <input type="number" name="numberOfManuallySaveFilesToKeep" autocomplete="new-numberOfManuallySaveFilesToKeep" [formControl]="basicSettingsFormGroup.controls.numberOfManuallySaveFilesToKeep" matInput placeholder="" value="">
+            @if (basicSettingsFormGroup.controls.numberOfManuallySaveFilesToKeep.hasError('required')) {
+              <mat-error>
+                Value <strong>required</strong>
+              </mat-error>
+            }
+            @if (basicSettingsFormGroup.controls.numberOfManuallySaveFilesToKeep.hasError('min')) {
+              <mat-error>
+                Value must >= 1
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 text-right sm:px-6 col-span-6 sm:col-span-6">
+          <button type="button" (click)="updateConfig()" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>

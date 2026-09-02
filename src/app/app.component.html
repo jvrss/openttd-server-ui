@@ -1,0 +1,11 @@
+<ngx-loading-bar [includeSpinner]="false" height="5px" color="#004C99"></ngx-loading-bar>
+@if (window.location.pathname.toLowerCase()!=='/login') {
+  <app-sidbar-layout [model]="sidebarLayoutModel">
+    <router-outlet></router-outlet>
+  </app-sidbar-layout>
+}
+@if (window.location.pathname.toLowerCase()==='/login') {
+  <router-outlet></router-outlet>
+}
+
+

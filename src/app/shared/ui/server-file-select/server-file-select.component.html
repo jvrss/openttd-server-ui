@@ -1,0 +1,30 @@
+<div class="w-full flex flex-row">
+  <mat-form-field class="w-full">
+    <mat-label>{{label}}</mat-label>
+    <input type="text"
+      placeholder="Pick one"
+      matInput
+      [formControl]="myControl"
+      [matAutocomplete]="auto">
+      <mat-autocomplete [displayWith]="fileToString" (optionSelected)="select($event)" autoActiveFirstOption
+        #auto="matAutocomplete">
+        <mat-option [value]="{name:'', path:''}">
+
+        </mat-option>
+        @for (file of filteredFiles | async; track file) {
+          <mat-option  [value]="file">
+            <div class="flex flex-row justify-between">
+              @if (file?.ownerName) {
+                <div><strong>{{file?.ownerName}}</strong></div>
+              }
+              <div>{{file.name}}</div>
+              <div>{{file.lastModified | date: 'MMM d, y, HH:mm:ss'}}</div>
+            </div>
+          </mat-option>
+        }
+      </mat-autocomplete>
+      <mat-hint align="start">{{hintStart}}</mat-hint>
+      <mat-hint align="end">{{hintEnd}}</mat-hint>
+    </mat-form-field>
+    <mat-icon (click)="download()" matTooltip="Download file" class="cursor-pointer ml-5 mt-7" matSuffix>download_for_offline</mat-icon>
+  </div>

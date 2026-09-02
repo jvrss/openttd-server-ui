@@ -1,0 +1,73 @@
+@if (alerts.length > 0) {
+  <div class="notifications-container">
+    @for (alert of alerts; track alert) {
+      @if (alert.type==='warning') {
+        <div class="border-l-4 border-yellow-400 bg-yellow-50 p-4 mt-2 mb-2">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <mat-icon class="text-yellow-400">warning</mat-icon>
+            </div>
+            <div class="ml-3 mt-1 w-full">
+              <p class="text-sm  text-yellow-700">
+                {{alert.message}}
+              </p>
+              @if (alert.stacktrace) {
+                <textarea rows="4"class="block w-full mt-2 text-neutral-900 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                  {{alert.stacktrace}}
+                </textarea>
+              }
+            </div>
+            <div (click)="remove(alert.id)" class="cursor-pointer ml-auto pl-3">
+              <div class="-mx-1.5 -my-1.5">
+                <mat-icon class="text-yellow-400 mt-2">close</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+      @if (alert.type==='success' || alert.type==='info') {
+        <div class="border-l-4 border-green-400 bg-green-50 p-4 mt-2 mb-2">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <mat-icon class="text-green-400">check_circle</mat-icon>
+            </div>
+            <div class="ml-3 mt-1">
+              <p class="text-sm  text-green-700">
+                {{alert.message}}
+              </p>
+            </div>
+            <div (click)="remove(alert.id)" class="cursor-pointer ml-auto pl-3">
+              <div class="-mx-1.5 -my-1.5">
+                <mat-icon class="text-green-400 mt-2">close</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+      @if (alert.type==='error') {
+        <div class="border-l-4 border-red-400 bg-red-50 p-4 mt-2 mb-2">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <mat-icon class="text-red-400">cancel</mat-icon>
+            </div>
+            <div class="ml-3 mt-1 w-full">
+              <p class="text-sm  text-red-700">
+                {{alert.message}}
+              </p>
+              @if (alert.stacktrace) {
+                <textarea rows="4" class="block w-full mt-2 text-neutral-900 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                  {{alert.stacktrace}}
+                </textarea>
+              }
+            </div>
+            <div (click)="remove(alert.id)" class="cursor-pointer ml-auto pl-3">
+              <div class="-mx-1.5 -my-1.5">
+                <mat-icon class="text-red-400 mt-2">close</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </div>
+}

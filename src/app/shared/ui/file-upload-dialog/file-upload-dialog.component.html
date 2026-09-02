@@ -1,0 +1,83 @@
+<ng-template #body>
+  <div class="flex flex-row justify-between">
+    <div class="mb-2">
+      <button
+        class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        mat-raised-button color="primary" (click)="openFileDialog()">Choose Files
+      </button>
+    </div>
+    <p class="p-2 mb-2 font-bold">Limit: {{limitHumanReadable}}</p>
+  </div>
+
+
+  <div mat-dialog-content class="w-[830px] h-[620px] mat-typography">
+
+    <table class="mt-2 min-w-full divide-y divide-gray-300">
+      <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">File</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Progress</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Actions</th>
+          <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"></th>
+
+        </tr>
+      </thead>
+      <tbody class="bg-white">
+        <!-- Odd row -->
+        @for (file of files ; track file) {
+          <tr>
+            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"> {{file.name}}</td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              <div class="text-center p-3 mt-2">
+                <mat-progress-bar mode="determinate" [value]="file.currentChunk.loadedPercent"></mat-progress-bar>
+                @if (file.currentChunk) {
+                  <p>{{file.currentChunk.loadedHumanReadable}}
+                  / {{file.sizeHumanReadable}}</p>
+                }
+              </div>
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              @if (STATES.UPLOAD_SUCCESS === file.state) {
+                <mat-icon class="text-green-400">check_circle</mat-icon>
+              }
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              <!--      <input *ngIf="file.state!==STATES.SIZE_LIMIT_EXCEEDED"-->
+              <!--             (click)="chunkedUpload?.uploadFile(file)"-->
+              <!--             value="upload" type="button">-->
+              @if (file.state!==STATES.SIZE_LIMIT_EXCEEDED && STATES.UPLOAD_SUCCESS !== file.state) {
+                <button mat-icon-button
+                  matTooltip="Removes file from upload list"
+                  (click)="chunkedUpload?.uploadFile(file)">
+                  <mat-icon>upload_file</mat-icon>
+                </button>
+              }
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              <!--      <input (click)="remove(file)" value="remove" type="button">-->
+              @if (STATES.UPLOAD_SUCCESS !== file.state) {
+                <button mat-icon-button matTooltip="Removes file from upload list" (click)="remove(file)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              }
+            </td>
+          </tr>
+        }
+
+        <!-- More people... -->
+      </tbody>
+    </table>
+    <input style="display:none" id="uploadInput" #fileUpload type="file">
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <button
+    class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+    (click)="uploadAll()" mat-raised-button>UPLOAD ALL
+  </button>
+</ng-template>
+
+<app-base-dialog [subTitle]="subTitle" [dialogRef]="dialogRef" [title]="dialogTitle" [bodyTemplate]="body" [footerTemplate]="footer">
+</app-base-dialog>

@@ -1,0 +1,1031 @@
+---
+openapi: 3.0.3
+info:
+  title: openttd-server API
+  version: 1.0.0-SNAPSHOT
+paths:
+  /api/auth/login:
+    post:
+      tags:
+      - Auth Resource
+      responses:
+        "200":
+          description: OK
+  /api/auth/logout:
+    post:
+      tags:
+      - Auth Resource
+      parameters:
+      - name: X-OPENTTD_SERVER_SESSION_ID
+        in: header
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/auth/verifyLogin:
+    post:
+      tags:
+      - Auth Resource
+      parameters:
+      - name: X-OPENTTD_SERVER_SESSION_ID
+        in: header
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /api/chunk-upload:
+    post:
+      tags:
+      - Chunk Upload Resource
+      parameters:
+      - name: fileName
+        in: query
+        schema:
+          type: string
+      - name: fileSize
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: offset
+        in: query
+        schema:
+          format: int32
+          type: integer
+      - name: targetDir
+        in: query
+        schema:
+          type: string
+      - name: type
+        in: query
+        schema:
+          $ref: '#/components/schemas/ServerFileType'
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              format: binary
+              type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/config:
+    get:
+      tags:
+      - Openttd Server Resource
+      operationId: getOpenttdServerConfig
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenttdServerConfigGet'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+    patch:
+      tags:
+      - Openttd Server Resource
+      operationId: updateOpenttdServerConfig
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenttdServerConfigUpdate'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenttdServerConfigGet'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/download/openttd-config:
+    get:
+      tags:
+      - Openttd Server Resource
+      operationId: downloadOpenttdConfig
+      parameters:
+      - name: fileName
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: object
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/download/save-game:
+    get:
+      tags:
+      - Openttd Server Resource
+      operationId: downloadSaveGame
+      parameters:
+      - name: downloadName
+        in: query
+        schema:
+          type: string
+      - name: fileName
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: object
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/explorer/copy:
+    post:
+      tags:
+      - File Explorer Resource
+      operationId: copyFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileOperationRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExplorerData'
+  /api/openttd-server/explorer/data:
+    get:
+      tags:
+      - File Explorer Resource
+      operationId: explorerList
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExplorerData'
+  /api/openttd-server/explorer/directory:
+    post:
+      tags:
+      - File Explorer Resource
+      operationId: createDirectory
+      parameters:
+      - name: dir
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExplorerData'
+  /api/openttd-server/explorer/download:
+    get:
+      tags:
+      - File Explorer Resource
+      operationId: downloadFile
+      parameters:
+      - name: downloadName
+        in: query
+        schema:
+          type: string
+      - name: fileName
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: object
+  /api/openttd-server/explorer/download-zip:
+    get:
+      tags:
+      - File Explorer Resource
+      operationId: downloadDirectoryZip
+      parameters:
+      - name: dir
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+    post:
+      tags:
+      - File Explorer Resource
+      operationId: downloadSelectedZip
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MultiFileDownloadRequest'
+      responses:
+        "200":
+          description: OK
+  /api/openttd-server/explorer/file:
+    delete:
+      tags:
+      - File Explorer Resource
+      operationId: deleteFile
+      parameters:
+      - name: file
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExplorerData'
+  /api/openttd-server/explorer/move:
+    post:
+      tags:
+      - File Explorer Resource
+      operationId: moveFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileOperationRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExplorerData'
+  /api/openttd-server/explorer/rename:
+    post:
+      tags:
+      - File Explorer Resource
+      operationId: renameFile
+      parameters:
+      - name: file
+        in: query
+        schema:
+          type: string
+      - name: newName
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExplorerData'
+  /api/openttd-server/exportModel:
+    get:
+      tags:
+      - Openttd Server Resource
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportModel'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/files:
+    get:
+      tags:
+      - Openttd Server Resource
+      operationId: getServerFiles
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServerFile'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/processes:
+    get:
+      tags:
+      - Openttd Server Resource
+      operationId: processes
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OpenttdProcess'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/server:
+    post:
+      tags:
+      - Openttd Server Resource
+      operationId: addServer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenttdServer'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenttdServer'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/server/{id}:
+    get:
+      tags:
+      - Openttd Server Resource
+      operationId: getServer
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenttdServer'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+    put:
+      tags:
+      - Openttd Server Resource
+      operationId: updateServer
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenttdServer'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenttdServer'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+    delete:
+      tags:
+      - Openttd Server Resource
+      operationId: deleteServer
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/server/{id}/command:
+    post:
+      tags:
+      - Openttd Server Resource
+      operationId: executeCommand
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Command'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Command'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/server/{id}/dump-process-data:
+    post:
+      tags:
+      - Openttd Server Resource
+      operationId: dumpProcessData
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: dir
+        in: query
+        schema:
+          type: string
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/server/{id}/pause-unpause:
+    post:
+      tags:
+      - Openttd Server Resource
+      operationId: pauseUnpause
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenttdServer'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/server/{id}/save:
+    post:
+      tags:
+      - Openttd Server Resource
+      operationId: save
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/server/{id}/send-terminal-command:
+    post:
+      tags:
+      - Openttd Server Resource
+      operationId: send-terminal-command
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/server/{id}/start:
+    post:
+      tags:
+      - Openttd Server Resource
+      operationId: startServer
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenttdServer'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/server/{id}/stop:
+    post:
+      tags:
+      - Openttd Server Resource
+      operationId: stop
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenttdServer'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+  /api/openttd-server/server/{id}/terminal/ui-open:
+    put:
+      tags:
+      - Openttd Server Resource
+      operationId: terminalOpenInUi
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - login_user
+components:
+  schemas:
+    BaseProcess:
+      type: object
+      properties:
+        processId:
+          type: string
+        processData:
+          type: string
+    Command:
+      type: object
+      properties:
+        marker:
+          type: string
+        command:
+          type: string
+        rawResult:
+          type: string
+        executed:
+          type: boolean
+        cmdSend:
+          type: boolean
+        type:
+          type: string
+    DefaultRepository:
+      type: object
+      properties:
+        serverConfigDir:
+          type: string
+        openttdSaveDir:
+          type: string
+        openttdConfigDir:
+          type: string
+        openttdServerMapper:
+          $ref: '#/components/schemas/OpenttdServerMapper'
+        configFile:
+          $ref: '#/components/schemas/Path'
+        openttdSaveDirPath:
+          $ref: '#/components/schemas/Path'
+        openttdConfigDirPath:
+          $ref: '#/components/schemas/Path'
+        openttdSaveGames:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServerFile'
+        openttdConfigs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServerFile'
+        openttdServerConfig:
+          $ref: '#/components/schemas/InternalOpenttdServerConfig'
+    ExplorerData:
+      type: object
+      properties:
+        root:
+          type: string
+        fileSeperator:
+          type: string
+        directories:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExplorerDirectory'
+    ExplorerDirectory:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        absolutePath:
+          type: string
+        relativePath:
+          type: string
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExplorerFile'
+        dirs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExplorerDirectory'
+    ExplorerFile:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        absolutePath:
+          type: string
+        relativePath:
+          type: string
+        baseName:
+          type: string
+        extension:
+          type: string
+        size:
+          format: int64
+          type: integer
+        lastModified:
+          format: int64
+          type: integer
+        isDirectory:
+          type: boolean
+    ExportModel:
+      type: object
+      properties:
+        openttdTerminalUpdateEvent:
+          $ref: '#/components/schemas/OpenttdTerminalUpdateEvent'
+        unpauseCommand:
+          $ref: '#/components/schemas/UnpauseCommand'
+        pauseCommand:
+          $ref: '#/components/schemas/PauseCommand'
+        serviceError:
+          $ref: '#/components/schemas/ServiceError'
+    FileOperationRequest:
+      type: object
+      properties:
+        sourcePath:
+          type: string
+        destinationPath:
+          type: string
+        overwrite:
+          type: boolean
+    InternalOpenttdServerConfig:
+      type: object
+      properties:
+        path:
+          type: string
+        autoSaveMinutes:
+          format: int32
+          type: integer
+        numberOfAutoSaveFilesToKeep:
+          format: int32
+          type: integer
+        numberOfManuallySaveFilesToKeep:
+          format: int32
+          type: integer
+        passwordSha256Hash:
+          type: string
+        servers:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpenttdServer'
+    MultiFileDownloadRequest:
+      type: object
+      properties:
+        directoryPath:
+          type: string
+        fileNames:
+          type: array
+          items:
+            type: string
+    OpenttdProcess:
+      type: object
+      properties:
+        startServerCommand:
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+        port:
+          format: int32
+          type: integer
+        saveGame:
+          type: string
+        config:
+          type: string
+        process:
+          $ref: '#/components/schemas/BaseProcess'
+        uiTerminalOpenedByClient:
+          type: boolean
+    OpenttdServer:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+        adminPassword:
+          type: string
+        serverAdminPort:
+          format: int32
+          type: integer
+        port:
+          format: int32
+          type: integer
+        saveGame:
+          $ref: '#/components/schemas/ServerFile'
+        openttdConfig:
+          $ref: '#/components/schemas/ServerFile'
+        openttdPrivateConfig:
+          $ref: '#/components/schemas/ServerFile'
+        openttdSecretsConfig:
+          $ref: '#/components/schemas/ServerFile'
+        autoSave:
+          type: boolean
+        autoPause:
+          type: boolean
+        paused:
+          type: boolean
+        inviteCode:
+          type: string
+        currentClients:
+          format: int32
+          type: integer
+        maxClients:
+          format: int32
+          type: integer
+        currentCompanies:
+          format: int32
+          type: integer
+        maxCompanies:
+          format: int32
+          type: integer
+        currentSpectators:
+          format: int32
+          type: integer
+        process:
+          $ref: '#/components/schemas/OpenttdProcess'
+    OpenttdServerConfigGet:
+      type: object
+      properties:
+        autoSaveMinutes:
+          format: int32
+          type: integer
+        numberOfAutoSaveFilesToKeep:
+          format: int32
+          type: integer
+        numberOfManuallySaveFilesToKeep:
+          format: int32
+          type: integer
+        servers:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpenttdServer'
+    OpenttdServerConfigUpdate:
+      type: object
+      properties:
+        autoSaveMinutes:
+          format: int32
+          type: integer
+        numberOfAutoSaveFilesToKeep:
+          format: int32
+          type: integer
+        numberOfManuallySaveFilesToKeep:
+          format: int32
+          type: integer
+        password:
+          type: string
+        oldPassword:
+          type: string
+    OpenttdServerMapper:
+      type: object
+    OpenttdTerminalUpdateEvent:
+      type: object
+      properties:
+        created:
+          format: int64
+          type: integer
+        clazz:
+          type: object
+        source:
+          type: string
+        processId:
+          type: string
+        text:
+          type: string
+    Path:
+      type: array
+    PauseCommand:
+      type: object
+      properties:
+        marker:
+          type: string
+        command:
+          type: string
+        rawResult:
+          type: string
+        executed:
+          type: boolean
+        cmdSend:
+          type: boolean
+        type:
+          type: string
+        repository:
+          $ref: '#/components/schemas/DefaultRepository'
+    ServerFile:
+      type: object
+      properties:
+        ownerId:
+          type: string
+        ownerName:
+          type: string
+        path:
+          type: string
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/ServerFileType'
+        exists:
+          type: boolean
+        created:
+          format: int64
+          type: integer
+        lastModified:
+          format: int64
+          type: integer
+    ServerFileType:
+      enum:
+      - SAVE_GAME
+      - OPENTTD_ROOT
+      - CONFIG
+      type: string
+    ServiceError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ServiceErrorType'
+        message:
+          type: string
+        stackTrace:
+          type: string
+    ServiceErrorType:
+      enum:
+      - VALIDATION_EXCEPTION
+      - RUNTIME_EXCEPTION
+      - UNKNOWN
+      type: string
+    UnpauseCommand:
+      type: object
+      properties:
+        marker:
+          type: string
+        command:
+          type: string
+        rawResult:
+          type: string
+        executed:
+          type: boolean
+        cmdSend:
+          type: boolean
+        type:
+          type: string
+        repository:
+          $ref: '#/components/schemas/DefaultRepository'
+  securitySchemes:
+    SecurityScheme:
+      type: http
+      description: Authentication
+      scheme: basic

@@ -1,0 +1,18 @@
+<ng-template #body>
+
+  @if (showTerminal) {
+    <app-terminal [terminalControl]="terminalControl" (command)="sendCommand($event)"
+    [consoleInput]="consoleInput"></app-terminal>
+  }
+
+</ng-template>
+
+<ng-template #footer>
+
+</ng-template>
+
+<app-base-dialog
+  [subTitle]="'While the terminal is open all auto commands (pause, unpause, server_info, etc.) will be skipped to prevent terminal pollution. Only last 20.000 characters from the terminal are displayed'"
+  [dialogRef]="dialogRef"
+  [title]="dialogTitle" [bodyTemplate]="body" [footerTemplate]="footer">
+</app-base-dialog>
