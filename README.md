@@ -2,7 +2,7 @@
 
 UI for the OpenTTD server.
 
-forked from andreashauschild/openttd-server
+forked from [andreashauschild/openttd-server](https://github.com/andreashauschild/openttd-server)
 
 ## Development server
 
