@@ -2,7 +2,12 @@
 
 UI for the OpenTTD server.
 
-forked from [andreashauschild/openttd-server](https://github.com/andreashauschild/openttd-server)
+Forked from [andreashauschild/openttd-server](https://github.com/andreashauschild/openttd-server)
+
+## Improvements:
+- Backend and frontend are updated to the latest versions.
+- Now, when the Docker container is stopped for any reason, the next time it is started, the servers that were running before it stopped will automatically start running again.
+
 
 ## Development server
 
