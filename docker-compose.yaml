@@ -1,0 +1,28 @@
+name: openttd-server
+
+services:
+  openttd-server-ui:
+    image: soldierjvx/openttd-server-ui:latest
+    container_name: openttd-server-ui
+    restart: unless-stopped
+    networks:
+      - openttd-network
+
+    ports:
+      - "4200:80"
+
+  openttd-server:
+    image: soldierjvx/openttd-server:latest
+    container_name: openttd-server
+    restart: unless-stopped
+    networks:
+      - openttd-network
+
+    ports:
+      - "8080:8080/tcp"
+      - "3979:3979/tcp"
+      - "3979:3979/udp"
+
+networks:
+  openttd-network:
+    driver: bridge

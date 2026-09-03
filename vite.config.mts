@@ -10,6 +10,20 @@ export default defineConfig(({ mode }) => ({
 
   plugins: [angular(), viteTsConfigPaths()],
 
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+      '/data-stream': {
+        target: 'ws://localhost:8080',
+        ws: true,
+        changeOrigin: true,
+      },
+    },
+  },
+
   test: {
     globals: true,
 
