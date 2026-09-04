@@ -1,3 +1,5 @@
+[![Build OpenTTD Server](https://github.com/jvrss/openttd-server-ui/actions/workflows/build.yml/badge.svg)](https://github.com/jvrss/openttd-server-ui/actions/workflows/build.yml)
+[![Release OpenTTD Server](https://github.com/jvrss/openttd-server-ui/actions/workflows/release.yml/badge.svg)](https://github.com/jvrss/openttd-server-ui/actions/workflows/release.yml)  
 [![Docker Pulls](https://badgen.net/docker/pulls/soldierjvx/openttd-server-ui?icon=docker&label=pulls)](https://hub.docker.com/r/soldierjvx/openttd-server-ui/)
 [![Docker Stars](https://badgen.net/docker/stars/soldierjvx/openttd-server-ui?icon=docker&label=stars)](https://hub.docker.com/r/soldierjvx/openttd-server-ui/)
 [![Docker Image Size](https://badgen.net/docker/size/soldierjvx/openttd-server-ui?icon=docker&label=image%20size)](https://hub.docker.com/r/soldierjvx/openttd-server-ui/)
