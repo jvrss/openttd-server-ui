@@ -41,6 +41,11 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
+# Technology
+Here are the technologies used in this project.
+- Angular 22
+- Docker
+
 ## License
 
 This project is licensed under the Apache License 2.0. See the LICENSE file for details.
